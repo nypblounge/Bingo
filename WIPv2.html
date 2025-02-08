@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSRS Bingo</title>
+    <style>
+        /* You can optionally style the image here */
+        #logo {
+            width: 100%; /* Make the image take up full width of its container */
+            max-width: 600px; /* Limit the maximum width */
+            height: auto; /* Maintain the aspect ratio */
+            display: block; /* Ensure it's displayed as a block */
+            margin: 0 auto; /* Center the image */
+        }
+    </style>
+</head>
+<body>
+<!-- Replace the text with an image -->
+<img id="logo" src="images/bingo-logo.png" alt="DC Battleship Bingo Logo">
+
+<button id="launchGameButton">Launch Game in a Window</button>
+
+<script>
+    // Event listener for the button to open the game in a new window
+    document.getElementById("launchGameButton").addEventListener("click", function() {
+        window.open("osrs-bingo.html", "_blank", "width=1200,height=800,scrollbars=no,resizable=no");
+    });
+</script>
+</body>
+</html>
+
+
+
+<h1> </h1>
+<!-- Wrapper for both boards and the leaderboard -->
+<div class="board-and-leaderboard-container">
+    <!-- Team 1 Board and Power-Up Display -->
+    <div>
+        <h2>Team 1</h2> <!-- Team 1 Heading -->
+        <div id="board1" class="board"></div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div id="leaderboard"></div>
+
+    <!-- Team 2 Board and Power-Up Display -->
+    <div>
+        <h2>Team 2</h2> <!-- Team 2 Heading -->
+        <div id="board2" class="board"></div>
+    </div>
+</div>
+
+
+
+<head>
+    <meta charset="utf-8">
+    <title>OSRS Bingo Digital Version with Images (Updated Tasks)</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #555555; /* Gray background */
+            background-image: url('images/background.png'); /* Add the image */
+            background-size: cover; /* Ensure the image covers the entire page */
+            background-position: center center; /* Center the image */
+            background-attachment: fixed; /* Keep the image fixed during scroll */
+        }
+
+
+
+
+        /* Adjust the title and text for headers (like "Team 1" and "Team 2") */
+        h2 {
+            color: #ffffff; /* White text for better contrast */
+            font-size: 40px !important; /* Force the font size to apply */
+            font-weight: bold; /* Make it bold for emphasis */
+            text-align: center; /* Center the text */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6); /* Subtle shadow for better readability */
+            margin-bottom: 10px; /* Add space between the title and the board */
+            width: 100%; /* Ensure the container is wide enough */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+
+        /* Ensure the DC Battleship Bingo title (h1) remains unaffected */
+        h1 {
+            color: #ffffff;
+            font-size: 32px; /* Slightly smaller for the main title */
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px; /* Adjust spacing if needed */
+        }
+
+
+        }
+        /* Update .board-container to allow space for the leaderboard */
+        /* Update board container to purple background */
+        .board-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            position: relative;
+            background-color: #333; /* Gray background */
+            border-radius: 8px; /* Optional: add rounded corners for a smooth look */
+            padding: 0; /* Remove padding */
+            width: 100%
+        }
+
+        /* Wrapper for both boards and the leaderboard */
+        .board-and-leaderboard-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Vertically center the items */
+            margin-bottom: 20px; /* Adjust this margin as needed */
+            width: 100%;
+        }
+
+        /* Leaderboard container */
+        #leaderboard {
+            background: linear-gradient(180deg, #6a4e23 0%, #2e1d12 100%); /* Dark gradient background like OSRS */
+            color: #fff; /* White text color for contrast */
+            font-family: "Arial", sans-serif; /* Default font */
+            font-size: 16px; /* Larger font for easy readability */
+            border: 3px solid #b35f32; /* Goldish border similar to OSRS menu */
+            border-radius: 10px; /* Rounded corners like OSRS */
+            padding: 15px; /* Padding around the content */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); /* Soft shadow for a 3D effect */
+            width: 300px; /* Set a max width for the leaderboard box */
+            margin: 20px auto; /* Center the leaderboard horizontally */
+        }
+
+        /* Title for the leaderboard */
+        #leaderboard h2 {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #f1c40f; /* Gold color like OSRS highlights */
+        }
+
+        /* Style for each player entry in the leaderboard */
+        #leaderboard div {
+            padding: 5px;
+            border-bottom: 1px solid #3c231b; /* Dark border between entries */
+            font-size: 14px; /* Smaller font for player entries */
+        }
+
+        /* Hover effect for player entries */
+        #leaderboard div:hover {
+            background-color: #4b2e1b; /* Highlight on hover with a brownish background */
+            cursor: pointer; /* Change cursor on hover */
+        }
+
+        /* Style for the buttons (similar to OSRS login buttons) */
+        #leaderboard button {
+            background-color: #d35400; /* Orange button background */
+            color: #fff; /* White text */
+            border: none;
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); /* 3D effect */
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* Hover effect for buttons */
+        #leaderboard button:hover {
+            background-color: #e67e22; /* Slightly lighter orange */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5); /* More intense shadow on hover */
+        }
+
+
+
+
+        /* Container for leaderboard */
+        .leaderboard-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            pointer-events: none; /* Allow interaction with tiles under it */
+        }
+
+
+
+
+        /* Style for the overall board */
+        .board {
+            display: grid;
+            grid-template-columns: repeat(5, 80px); /* 5 columns */
+            grid-gap: 5px; /* Gap between cells */
+            border: 4px solid #8B4513; /* Rustic wood-like border color */
+            background-color: #d2b48c; /* Wooden background color for the board */
+            padding: 5px;
+            padding-right: 10px;
+            box-sizing: border-box;
+            max-width: 100%;
+            flex: 1;
+            margin: 0 10px;
+            border-radius: 10px; /* Rounded corners like OSRS inventory */
+        }
+
+        /* Style for each cell (tile) in the grid */
+        .cell {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #8B4513; /* Matching rustic border color */
+            background-color: #f0e68c; /* Light golden background like OSRS inventory */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 2px;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+            background-image: url('path/to/wood-texture.png'); /* Optional wood texture for the background */
+            background-size: cover; /* Ensure texture covers the entire tile */
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */
+        }
+
+        /* Hover effect to mimic item selection in OSRS */
+        .cell:hover {
+            background-color: #ffeb3b; /* Bright highlight on hover */
+            transform: scale(1.05); /* Slight scale effect for hover */
+        }
+        /* Display task name when hovered */
+        .cell:hover .task-name {
+            display: block;
+        }
+
+        /* Task name styling */
+        .task-name {
+            display: none;  /* Hide by default */
+            font-size: 10px;
+            color: #555;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* Blocked tile appearance */
+        .cell.blocked {
+            background-color: #f88; /* Red for blocked cells */
+            cursor: not-allowed;
+        }
+
+        /* Completed tile appearance */
+        .cell.completed {
+            background-color: #8f8; /* Green for completed cells */
+            text-decoration: none;
+        }
+
+        /* Player name displayed under the completed task */
+        .cell .player-name {
+            font-size: 10px;
+            color: #555;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* Style the image to fit within the inventory slot */
+        .cell img {
+            max-width: 70%; /* Shrinks the image to fit within the slot */
+            object-fit: contain;
+        }
+
+        /* Adjust the title and text for headers (like "Team 1" and "Team 2") */
+        h2 {
+            color: #8B4513; /* Dark rustic color */
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+        /* Your newly added CSS for context menu and tile states */
+        .tile-context-menu {
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 10px;
+            width: 150px;
+            display: block;
+        }
+        .tile-context-menu button {
+            width: 100%;
+            padding: 5px;
+            margin: 2px 0;
+            text-align: left;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+        }
+        .tile-context-menu button:hover {
+            background-color: #f0f0f0;
+        }
+        /* Blocked tile appearance */
+        .cell.blocked {
+            background-color: #f88; /* Red color for blocked */
+            cursor: not-allowed;
+        }
+        /* Completed tile appearance */
+        .cell.completed {
+            background-color: #8f8; /* Green for completed */
+            text-decoration: none;
+        }
+        /* Display player name for completed tiles */
+        .cell .player-name {
+            font-size: 10px;
+            color: #555;
+            text-align: center;
+            margin-top: 5px;
+        }
+        /* Ensure images are properly sized within the cells */
+        .cell img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Maintains aspect ratio while fitting the tile */
+        }
+        /* Tile Container */
+        .cell {
+            display: flex;
+            flex-direction: column; /* Stack content vertically */
+            justify-content: center;
+            align-items: center;
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            font-size: 12px;
+            padding: 2px;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ensure images fit properly */
+        .cell img {
+            max-width: 100%;
+            max-height: 70%; /* Shrinks the image to fit */
+            object-fit: contain; /* Keeps the aspect ratio intact */
+        }
+
+        /* Player name styling below the image */
+        .cell .player-name {
+            font-size: 10px;
+            color: #555;
+            text-align: center;
+            margin-top: 5px; /* Adds spacing between image and name */
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+
+
+<!-- Power-Up Controls -->
+<div id="powerup-controls" style="text-align:center; margin-bottom:20px;">
+    <h2>Every 2 Tiles unlocked gives that team 1 block</h2>
+    <!-- Randomize Boards Button -->
+    <button id="randomizeBoards">Randomize Boards</button>
+    <button id="predefinedLayoutButton">Predefined Layout</button>
+    <p>Each Tile is worth 5 points</p>
+    <p> Win conditions: First to get a bingo or team with most points after 1 month</p>
+    </select>
+    </select>
+    <button id="activatePowerup">Good Luck</button>
+    <div id="powerup-instructions" style="margin-top:10px; font-weight:bold;"></div>
+</div>
+
+<!-- Context Menu for Blocking/Unblocking -->
+<div id="contextMenu"></div>
+
+<script>
+    // Updated list of tasks (24 tasks; center is always "Fire cape")
+    const tasks = [
+        "any rev weapon",
+        "any barrows set",
+        "any moons set",
+        "scoripo unique",
+        "TOA unique (not ring)",
+        "Callisto unique",
+        "Dagon'hai robes (piece/set)",
+        "Nex unique",
+        "Vetion unique",
+        "GWD unique",
+        "elder chaos Robe piece",
+        "champion scroll",
+        "corp unique",
+        "veninati unique",
+        "Chambers unique (not scroll)",
+        "dusk mystic piece",
+        "smite 10m+",
+        "dt2 unique (ring/virtus)",
+        "zalcano unique",
+        "full mcchicken set",
+        "zulrah unique",
+        "any jar",
+        "rev emblem over 5m",
+        "hill giant club/ brio essence"
+    ];
+    const centerTask = "Fire cape";
+
+    // Mapping tasks to image URLs (relative to your HTML file)
+    const taskImages = {
+        "Fire cape": "images/fire_cape.png",
+        "any rev weapon": "images/rev_weapon.png",
+        "any barrows set": "images/barrows_set.png",
+        "any moons set": "images/moons_set.png",
+        "scoripo unique": "images/scoripo_unique.png",
+        "TOA unique (not ring)": "images/toa_unique.png",
+        "Callisto unique": "images/callisto_unique.png",
+        "Dagon'hai robes (piece/set)": "images/dagonhai_robes.png",
+        "Nex unique": "images/nex_unique.png",
+        "Vetion unique": "images/vetion_unique.png",
+        "GWD unique": "images/gwd_unique.png",
+        "elder chaos Robe piece": "images/elder_chaos_robe.png",
+        "champion scroll": "images/champion_scroll.png",
+        "corp unique": "images/corp_unique.png",
+        "veninati unique": "images/veninati_unique.png",
+        "Chambers unique (not scroll)": "images/chambers_unique.png",
+        "dusk mystic piece": "images/dusk_mystic.png",
+        "smite 10m+": "images/smite.png",
+        "dt2 unique (ring/virtus)": "images/dt2_unique.png",
+        "zalcano unique": "images/zalcano_unique.png",
+        "full mcchicken set": "images/full_mcchicken.png",
+        "zulrah unique": "images/zulrah_unique.png",
+        "any jar": "images/any_jar.png",
+        "rev emblem over 5m": "images/rev_emblem.png",
+        "hill giant club/ brio essence": "images/hill_giant.png"
+    };
+    // Predefined task list (you can customize this list)
+    const predefinedTasks = [
+        "any rev weapon", "any barrows set", "any moons set", "scoripo unique", "TOA unique (not ring)",
+        "Callisto unique", "Dagon'hai robes (piece/set)", "Nex unique", "Vetion unique", "GWD unique",
+        "elder chaos Robe piece", "champion scroll", "corp unique", "veninati unique", "Chambers unique (not scroll)",
+        "dusk mystic piece", "smite 10m+", "dt2 unique (ring/virtus)", "zalcano unique", "full mcchicken set",
+        "zulrah unique", "any jar", "rev emblem over 5m", "hill giant club/ brio essence", "corp unique"
+    ];
+
+    // Predefined layout generator (respecting center task and randomizing other tasks)
+    function generatePredefinedBoardLayout() {
+        let board = [];
+        for (let i = 0; i < 25; i++) {
+            let cell = {
+                id: i,
+                task: "",
+                powerUp: null,
+                completed: false,
+                blocked: false,
+                image: null
+            };
+
+            if (i === 12) {
+                // Center is always the Fire Cape
+                cell.task = "Fire cape";
+            } else {
+                // Select a task from predefinedTasks list and assign it to the cell
+                cell.task = predefinedTasks[i < predefinedTasks.length ? i : i % predefinedTasks.length];
+            }
+
+            if (taskImages[cell.task]) {
+                cell.image = taskImages[cell.task];
+            }
+            board.push(cell);
+        }
+
+        // Randomly assign 3 hidden power-ups (excluding the center cell)
+        let indices = [];
+        for (let i = 0; i < 25; i++) {
+            if (i !== 12) indices.push(i);
+        }
+        shuffleArray(indices);
+        powerUpTypes.forEach((puType, index) => {
+            board[indices[index]].powerUp = puType;
+        });
+
+        return board;
+    }
+
+    // Add event listener to the "Predefined Layout" button
+    document.getElementById("predefinedLayoutButton").addEventListener("click", () => {
+        if (confirm("Are you sure you want to apply the predefined layout? This will reset all progress.")) {
+            // Apply the predefined layout
+            let predefinedLayout = generatePredefinedBoardLayout();
+            teams.team1.board = cloneBoard(predefinedLayout);
+            teams.team2.board = cloneBoard(predefinedLayout);
+            teams.team1.availablePowerUps = [];
+            teams.team2.availablePowerUps = [];
+            renderBoard("team1");
+            renderBoard("team2");
+            updatePowerUpDisplay("team1");
+            updatePowerUpDisplay("team2");
+        }
+    });
+
+    const powerUpTypes = ["sabotage", "steal", "scramble"];
+
+    let teams = {
+        team1: { board: [], availablePowerUps: [] },
+        team2: { board: [], availablePowerUps: [] }
+    };
+    let playerPoints = {
+        team1: {},
+        team2: {}
+    };
+
+    let pendingPowerUp = null;
+
+    // Shuffle an array (Fisher-Yates)
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Generate a board layout (default layout for both teams)
+    function generateDefaultBoardLayout() {
+        let tasksCopy = tasks.slice();
+        shuffleArray(tasksCopy);
+        let board = [];
+        for (let i = 0; i < 25; i++) {
+            let cell = {
+                id: i,
+                task: "",
+                powerUp: null,
+                completed: false,
+                blocked: false,
+                image: null
+            };
+            if (i === 12) {
+                cell.task = centerTask;
+            } else {
+                cell.task = tasksCopy.pop();
+            }
+            if (taskImages[cell.task]) {
+                cell.image = taskImages[cell.task];
+            }
+            board.push(cell);
+        }
+        // Randomly assign 3 hidden power-ups (excluding the center cell)
+        let indices = [];
+        for (let i = 0; i < 25; i++) {
+            if (i !== 12) indices.push(i);
+        }
+        shuffleArray(indices);
+        powerUpTypes.forEach((puType, index) => {
+            board[indices[index]].powerUp = puType;
+        });
+        return board;
+    }
+
+    // Deep clone a board layout
+    function cloneBoard(board) {
+        return board.map(cell => Object.assign({}, cell));
+    }
+
+    // Initialize both teams with the same default board layout
+    function initializeBoards() {
+        defaultBoardLayout = generateDefaultBoardLayout();
+        teams.team1.board = cloneBoard(defaultBoardLayout);
+        teams.team2.board = cloneBoard(defaultBoardLayout);
+        teams.team1.availablePowerUps = [];
+        teams.team2.availablePowerUps = [];
+        renderBoard("team1");
+        renderBoard("team2");
+        updatePowerUpDisplay("team1");
+        updatePowerUpDisplay("team2");
+    }
+
+    // Render a team's board
+    function renderBoard(teamKey) {
+        const boardDiv = document.getElementById(teamKey === "team1" ? "board1" : "board2");
+        boardDiv.innerHTML = "";
+        teams[teamKey].board.forEach(cell => {
+            const cellDiv = document.createElement("div");
+            cellDiv.className = "cell";
+            cellDiv.id = teamKey + "-cell-" + cell.id;
+            if (cell.completed) {
+                cellDiv.classList.add("completed");
+                if (cell.player) {
+                    const playerNameElem = document.createElement("div");
+                    playerNameElem.className = 'player-name';
+                    playerNameElem.innerText = `Unlocked by: ${cell.player}`;
+                    cellDiv.appendChild(playerNameElem);
+                }
+            }
+            if (cell.blocked) {
+                cellDiv.classList.add("blocked");
+            }
+
+            // Display the task (and image if any)
+            if (cell.image) {
+                const imgElem = document.createElement("img");
+                imgElem.src = cell.image;
+                imgElem.alt = cell.task;
+                cellDiv.appendChild(imgElem);
+            } else {
+                cellDiv.innerText = cell.task;
+            }
+            // Display the task name under the image (only visible on hover)
+            const taskNameElem = document.createElement("div");
+            taskNameElem.className = "task-name";
+            taskNameElem.innerText = cell.task;
+            cellDiv.appendChild(taskNameElem);
+
+            // Click event to open the context menu with options
+            cellDiv.addEventListener("click", () => onCellClick(teamKey, cell.id));
+            boardDiv.appendChild(cellDiv);
+        });
+    }
+
+    // Update available power-ups display
+    function updatePowerUpDisplay(teamKey) {
+        const displayDiv = document.getElementById(teamKey === "team1" ? "team1-powerups" : "team2-powerups");
+        let list = teams[teamKey].availablePowerUps;
+        displayDiv.innerText = list.length === 0 ? "Available Power-Ups: None" : "Available Power-Ups: " + list.join(", ");
+    }
+
+    function onCellClick(teamKey, cellId) {
+        let board = teams[teamKey].board;
+        let cell = board[cellId];
+
+        // Create the context menu for options
+        const contextMenu = document.createElement('div');
+        contextMenu.className = 'tile-context-menu';
+
+        // Option 1: Unlock (Completed)
+        const unlockOption = document.createElement('button');
+        unlockOption.innerText = 'Unlock (Completed)';
+        unlockOption.onclick = () => {
+            const playerName = prompt('Enter the name of the player who unlocked this tile:');
+            if (playerName) {
+                // Award 5 points for unlocking a tile
+                if (!playerPoints[teamKey][playerName]) {
+                    playerPoints[teamKey][playerName] = 0;
+                }
+                playerPoints[teamKey][playerName] += 5;
+
+                // Mark the tile as completed
+                cell.completed = true;
+                cell.player = playerName;
+
+                // Check if Bingo is achieved
+                checkForBingo(teamKey);
+
+                // Update the leaderboard
+                updateLeaderboard();
+                renderBoard(teamKey);
+            }
+            document.body.removeChild(contextMenu);
+        };
+
+        // Option 2: Block
+        const blockOption = document.createElement('button');
+        blockOption.innerText = 'Block';
+        blockOption.onclick = () => {
+            cell.blocked = true;
+            renderBoard(teamKey);
+            document.body.removeChild(contextMenu);
+        };
+
+        // Option 3: Reset
+        const resetOption = document.createElement('button');
+        resetOption.innerText = 'Reset';
+        resetOption.onclick = () => {
+            // Find the player who unlocked the tile and subtract their points
+            if (cell.completed && cell.player) {
+                const playerName = cell.player;
+                playerPoints[teamKey][playerName] -= 5;  // Subtract points for resetting the tile
+                if (playerPoints[teamKey][playerName] <= 0) {
+                    delete playerPoints[teamKey][playerName];  // Remove player if they have no more points
+                }
+            }
+
+            // Reset the tile to its original state
+            cell.completed = false;
+            cell.blocked = false;
+            cell.player = null;  // Remove the player name if there was one
+            renderBoard(teamKey);
+            updateLeaderboard();  // Update the leaderboard after resetting
+            document.body.removeChild(contextMenu);
+        };
+
+
+        // Append options to the context menu
+        contextMenu.appendChild(unlockOption);
+        contextMenu.appendChild(blockOption);
+        contextMenu.appendChild(resetOption);
+
+        // Position and show the context menu at the tile's position
+        const cellDiv = document.getElementById(`${teamKey}-cell-${cellId}`);
+        contextMenu.style.position = 'absolute';
+        contextMenu.style.left = `${cellDiv.getBoundingClientRect().left}px`;
+        contextMenu.style.top = `${cellDiv.getBoundingClientRect().top + window.scrollY}px`;
+        document.body.appendChild(contextMenu);
+    }
+
+    function checkForBingo(teamKey) {
+        let board = teams[teamKey].board;
+        let grid = [];
+        for (let i = 0; i < 5; i++) {
+            grid.push(board.slice(i * 5, i * 5 + 5));
+        }
+
+        let bingo = false;
+        let bingoCount = 0;
+
+        // Check rows
+        for (let i = 0; i < 5; i++) {
+            if (grid[i].every(cell => cell.completed)) {
+                bingo = true;
+                bingoCount++;
+            }
+        }
+
+        // Check columns
+        for (let j = 0; j < 5; j++) {
+            let colComplete = true;
+            for (let i = 0; i < 5; i++) {
+                if (!grid[i][j].completed) { colComplete = false; break; }
+            }
+            if (colComplete) bingo = true;
+        }
+
+        // Check diagonals
+        let diag1 = true, diag2 = true;
+        for (let i = 0; i < 5; i++) {
+            if (!grid[i][i].completed) diag1 = false;
+            if (!grid[i][4 - i].completed) diag2 = false;
+        }
+        if (diag1 || diag2) bingo = true;
+
+        if (bingo) {
+            // Award 5 points for each Bingo achieved
+            for (let i = 0; i < bingoCount; i++) {
+                Object.values(playerPoints[teamKey]).forEach(playerPoints => {
+                    playerPoints += 5; // Add points for each Bingo
+                });
+            }
+
+            alert(teamKey.toUpperCase() + " has achieved BINGO!");
+        }
+    }
+
+
+    // Context menu for blocking/unblocking a cell
+    function showContextMenu(teamKey, cellId, x, y) {
+        const contextMenu = document.getElementById("contextMenu");
+        contextMenu.innerHTML = "";
+        contextMenu.style.top = y + "px";
+        contextMenu.style.left = x + "px";
+        contextMenu.style.display = "block";
+        let cell = teams[teamKey].board[cellId];
+        const blockBtn = document.createElement("button");
+        blockBtn.innerText = cell.blocked ? "Unblock Tile" : "Block Tile";
+        blockBtn.addEventListener("click", () => {
+            if (cell.blocked) {
+                cell.blocked = false;
+                cell.completed = false;
+            } else {
+                cell.blocked = true;
+                cell.completed = false;
+            }
+            renderBoard(teamKey);
+            contextMenu.style.display = "none";
+        });
+        contextMenu.appendChild(blockBtn);
+        const cancelBtn = document.createElement("button");
+        cancelBtn.innerText = "Cancel";
+        cancelBtn.addEventListener("click", () => {
+            contextMenu.style.display = "none";
+        });
+        contextMenu.appendChild(cancelBtn);
+    }
+
+    // Hide context menu when clicking elsewhere
+    document.addEventListener("click", function(e) {
+        const contextMenu = document.getElementById("contextMenu");
+        if (contextMenu.style.display === "block" && !contextMenu.contains(e.target)) {
+            contextMenu.style.display = "none";
+        }
+    });
+
+    // Power-up activation
+    document.getElementById("activatePowerup").addEventListener("click", () => {
+        const team = document.getElementById("teamSelect").value;
+        const pu = document.getElementById("powerupSelect").value;
+        if (!pu) {
+            alert("Please select a power-up.");
+            return;
+        }
+        const idx = teams[team].availablePowerUps.indexOf(pu);
+        if (idx === -1) {
+            alert("Team does not have the " + pu + " power-up available.");
+            return;
+        }
+        teams[team].availablePowerUps.splice(idx, 1);
+        updatePowerUpDisplay(team);
+        if (pu === "sabotage" || pu === "steal") {
+            pendingPowerUp = { team: team, type: pu };
+            document.getElementById("powerup-instructions").innerText =
+                "Power-Up Activated (" + pu + "): Please click a target cell on the opponent's board.";
+        } else if (pu === "scramble") {
+            let target = prompt("Enter board to scramble: 'self' for your board or 'opponent' for the other team:");
+            if (target !== "self" && target !== "opponent") {
+                alert("Invalid input. Cancelling scramble.");
+                return;
+            }
+            let targetTeam = (target === "self") ? team : (team === "team1" ? "team2" : "team1");
+            scrambleBoard(targetTeam);
+            document.getElementById("powerup-instructions").innerText = "Scramble applied to " + targetTeam + " board.";
+        }
+    });
+
+    // Apply sabotage or steal effect
+    function applyPowerUpEffect(activatingTeam, powerUpType, targetTeam, cellId) {
+        let targetCell = teams[targetTeam].board[cellId];
+        if (powerUpType === "sabotage") {
+            if (targetCell.completed) {
+                alert("Cannot sabotage an already completed cell.");
+                return;
+            }
+            targetCell.blocked = true;
+            alert("Sabotage applied! The cell is now blocked.");
+        } else if (powerUpType === "steal") {
+            if (!targetCell.completed) {
+                alert("Steal can only be applied to a completed cell.");
+                return;
+            }
+            let stolen = false;
+            teams[activatingTeam].board.forEach(cell => {
+                if (!cell.completed && cell.task === targetCell.task) {
+                    cell.completed = true;
+                    stolen = true;
+                }
+            });
+            if (stolen) {
+                alert("Steal applied! The corresponding cell is marked completed on your board.");
+            } else {
+                alert("No matching cell found to steal.");
+            }
+        }
+        renderBoard(targetTeam);
+        renderBoard(activatingTeam);
+        checkForBingo(activatingTeam);
+        checkForBingo(targetTeam);
+    }
+
+    // Scramble board (shuffles tasks on uncompleted cells, excluding center)
+    function scrambleBoard(teamKey) {
+        let board = teams[teamKey].board;
+        let remainingTasks = [];
+        for (let i = 0; i < board.length; i++) {
+            if (i === 12) continue;
+            if (!board[i].completed) {
+                remainingTasks.push(board[i].task);
+            }
+        }
+        shuffleArray(remainingTasks);
+        for (let i = 0; i < board.length; i++) {
+            if (i === 12) continue;
+            if (!board[i].completed) {
+                board[i].task = remainingTasks.pop();
+            }
+        }
+        renderBoard(teamKey);
+    }
+
+    // Handling power-up target selection on opponent's board
+    document.getElementById("board1").addEventListener("click", function(e) {
+        if (pendingPowerUp && pendingPowerUp.team === "team2") {
+            let parts = e.target.id.split("-");
+            let cellId = parseInt(parts[parts.length - 1]);
+            applyPowerUpEffect(pendingPowerUp.team, pendingPowerUp.type, "team1", cellId);
+            pendingPowerUp = null;
+            document.getElementById("powerup-instructions").innerText = "";
+        }
+    });
+    document.getElementById("board2").addEventListener("click", function(e) {
+        if (pendingPowerUp && pendingPowerUp.team === "team1") {
+            let parts = e.target.id.split("-");
+            let cellId = parseInt(parts[parts.length - 1]);
+            applyPowerUpEffect(pendingPowerUp.team, pendingPowerUp.type, "team2", cellId);
+            pendingPowerUp = null;
+            document.getElementById("powerup-instructions").innerText = "";
+        }
+    });
+
+    // Randomize Boards button event
+    document.getElementById("randomizeBoards").addEventListener("click", () => {
+        if (confirm("Are you sure you want to re-randomize both boards? This will reset all progress.")) {
+            initializeBoards();
+        }
+    });
+
+    let defaultBoardLayout = generateDefaultBoardLayout();
+    initializeBoards();
+
+    // Update the leaderboard display
+    function updateLeaderboard() {
+        const leaderboardDiv = document.getElementById('leaderboard');
+        leaderboardDiv.innerHTML = '<h2>Leaderboard</h2>';
+
+        // Sort players by points in descending order
+        let allPlayers = [];
+        for (let team in playerPoints) {
+            for (let player in playerPoints[team]) {
+                allPlayers.push({ name: player, points: playerPoints[team][player] });
+            }
+        }
+
+        allPlayers.sort((a, b) => b.points - a.points);
+
+        // Display players and their points
+        allPlayers.forEach(player => {
+            const playerDiv = document.createElement('div');
+            playerDiv.innerText = `${player.name} - ${player.points} points`;  // Change format here
+            leaderboardDiv.appendChild(playerDiv);
+        });
+    }
+
+</script>
+</body>
+</html>

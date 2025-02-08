@@ -232,19 +232,6 @@
             background-color: #ffeb3b; /* Bright highlight on hover */
             transform: scale(1.05); /* Slight scale effect for hover */
         }
-        /* Display task name when hovered */
-        .cell:hover .task-name {
-            display: block;
-        }
-
-        /* Task name styling */
-        .task-name {
-            display: none;  /* Hide by default */
-            font-size: 10px;
-            color: #555;
-            text-align: center;
-            margin-top: 5px;
-        }
 
         /* Blocked tile appearance */
         .cell.blocked {
@@ -370,6 +357,9 @@
     <!-- Randomize Boards Button -->
     <button id="randomizeBoards">Randomize Boards</button>
     <button id="predefinedLayoutButton">Predefined Layout</button>
+    <button id="saveLayoutButton">Save Layout</button>
+    <button id="loadLayoutButton">Load Layout</button>
+
     <p>Each Tile is worth 5 points</p>
     <p> Win conditions: First to get a bingo or team with most points after 1 month</p>
     </select>
@@ -447,6 +437,25 @@
         "dusk mystic piece", "smite 10m+", "dt2 unique (ring/virtus)", "zalcano unique", "full mcchicken set",
         "zulrah unique", "any jar", "rev emblem over 5m", "hill giant club/ brio essence", "corp unique"
     ];
+    function saveLayout() {
+        const layout = generateDefaultBoardLayout(); // Or use any other method to generate the board
+        localStorage.setItem("savedLayout", JSON.stringify(layout)); // Save the layout to localStorage
+        alert("Board layout saved!");
+    }
+    function loadLayout() {
+        const savedLayout = localStorage.getItem("savedLayout");
+        if (savedLayout) {
+            const layout = JSON.parse(savedLayout); // Parse the saved layout
+            teams.team1.board = cloneBoard(layout); // Apply to Team 1
+            teams.team2.board = cloneBoard(layout); // Apply to Team 2
+            renderBoard("team1"); // Render Team 1 board
+            renderBoard("team2"); // Render Team 2 board
+            alert("Board layout loaded!");
+        } else {
+            alert("No saved layout found.");
+        }
+    }
+
 
     // Predefined layout generator (respecting center task and randomizing other tasks)
     function generatePredefinedBoardLayout() {
@@ -487,6 +496,10 @@
 
         return board;
     }
+    // add event lister to the saved/loaded buttons
+    document.getElementById("saveLayoutButton").addEventListener("click", saveLayout);
+    document.getElementById("loadLayoutButton").addEventListener("click", loadLayout);
+
 
     // Add event listener to the "Predefined Layout" button
     document.getElementById("predefinedLayoutButton").addEventListener("click", () => {
@@ -609,11 +622,6 @@
             } else {
                 cellDiv.innerText = cell.task;
             }
-            // Display the task name under the image (only visible on hover)
-            const taskNameElem = document.createElement("div");
-            taskNameElem.className = "task-name";
-            taskNameElem.innerText = cell.task;
-            cellDiv.appendChild(taskNameElem);
 
             // Click event to open the context menu with options
             cellDiv.addEventListener("click", () => onCellClick(teamKey, cell.id));

@@ -44,7 +44,7 @@
 
     <!-- Leaderboard -->
     <div id="leaderboard"></div>
-    
+
 
     <!-- Team 2 Board and Power-Up Display -->
     <div>
@@ -982,18 +982,9 @@
     // Randomize Boards button event
     document.getElementById("randomizeBoards").addEventListener("click", () => {
         if (confirm("Are you sure you want to re-randomize both boards? This will reset all progress.")) {
-            // Randomize both teams' boards
             initializeBoards();
-
-            // Reset the leaderboard stats for both teams
-            playerPoints.team1 = {};
-            playerPoints.team2 = {};
-
-            // Re-render the leaderboard
-            updateLeaderboard();
         }
     });
-
 
     let defaultBoardLayout = generateDefaultBoardLayout();
     initializeBoards();

@@ -39,15 +39,18 @@
     <div>
         <h2>Team 1</h2> <!-- Team 1 Heading -->
         <div id="board1" class="board"></div>
+        <div id="team1-powerups"></div>
     </div>
 
     <!-- Leaderboard -->
     <div id="leaderboard"></div>
+    
 
     <!-- Team 2 Board and Power-Up Display -->
     <div>
         <h2>Team 2</h2> <!-- Team 2 Heading -->
         <div id="board2" class="board"></div>
+        <div id="team2-powerups"></div>
     </div>
 </div>
 
@@ -222,7 +225,6 @@
             user-select: none;
             position: relative;
             overflow: hidden;
-            background-image: url('path/to/wood-texture.png'); /* Optional wood texture for the background */
             background-size: cover; /* Ensure texture covers the entire tile */
             transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */
         }
@@ -438,23 +440,85 @@
         "zulrah unique", "any jar", "rev emblem over 5m", "hill giant club/ brio essence", "corp unique"
     ];
     function saveLayout() {
-        const layout = generateDefaultBoardLayout(); // Or use any other method to generate the board
-        localStorage.setItem("savedLayout", JSON.stringify(layout)); // Save the layout to localStorage
-        alert("Board layout saved!");
+        const layout = generateDefaultBoardLayout(); // Generate the layout (as before)
+
+        // Capture the state of each tile (completed, blocked, etc.)
+        const boardState = {
+            team1: teams.team1.board.map(cell => ({
+                task: cell.task,
+                completed: cell.completed,
+                blocked: cell.blocked,
+                player: cell.player || null
+            })),
+            team2: teams.team2.board.map(cell => ({
+                task: cell.task,
+                completed: cell.completed,
+                blocked: cell.blocked,
+                player: cell.player || null
+            }))
+        };
+
+        // Capture the leaderboard stats
+        const leaderboard = {
+            team1: { ...playerPoints.team1 },
+            team2: { ...playerPoints.team2 }
+        };
+
+        // Save the layout, board state, and leaderboard to localStorage
+        localStorage.setItem("savedLayout", JSON.stringify({ layout, boardState, leaderboard }));
+        alert("Board layout and leaderboard saved!");
     }
+
+
+
+    if (typeof(Storage) !== "undefined") {
+        console.log("localStorage is available");
+    } else {
+        console.log("localStorage is not available");
+    }
+
+
     function loadLayout() {
-        const savedLayout = localStorage.getItem("savedLayout");
-        if (savedLayout) {
-            const layout = JSON.parse(savedLayout); // Parse the saved layout
-            teams.team1.board = cloneBoard(layout); // Apply to Team 1
-            teams.team2.board = cloneBoard(layout); // Apply to Team 2
-            renderBoard("team1"); // Render Team 1 board
-            renderBoard("team2"); // Render Team 2 board
-            alert("Board layout loaded!");
+        const savedData = localStorage.getItem("savedLayout");
+        if (savedData) {
+            const { layout, boardState, leaderboard } = JSON.parse(savedData);
+
+            // Apply the saved layout to both teams' boards
+            teams.team1.board = cloneBoard(layout); // Apply layout to Team 1
+            teams.team2.board = cloneBoard(layout); // Apply layout to Team 2
+
+            // Restore the completed and blocked states
+            boardState.team1.forEach((cell, index) => {
+                teams.team1.board[index].completed = cell.completed;
+                teams.team1.board[index].blocked = cell.blocked;
+                teams.team1.board[index].player = cell.player;
+            });
+
+            boardState.team2.forEach((cell, index) => {
+                teams.team2.board[index].completed = cell.completed;
+                teams.team2.board[index].blocked = cell.blocked;
+                teams.team2.board[index].player = cell.player;
+            });
+
+            // Restore the leaderboard stats
+            playerPoints.team1 = { ...leaderboard.team1 };
+            playerPoints.team2 = { ...leaderboard.team2 };
+
+            // Re-render both boards and update the leaderboard
+            renderBoard("team1");
+            renderBoard("team2");
+            updateLeaderboard();
+
+            alert("Board layout and leaderboard loaded!");
         } else {
             alert("No saved layout found.");
         }
     }
+
+    function cloneBoard(board) {
+        return board.map(cell => Object.assign({}, cell));
+    }
+
 
 
     // Predefined layout generator (respecting center task and randomizing other tasks)
@@ -632,9 +696,14 @@
     // Update available power-ups display
     function updatePowerUpDisplay(teamKey) {
         const displayDiv = document.getElementById(teamKey === "team1" ? "team1-powerups" : "team2-powerups");
-        let list = teams[teamKey].availablePowerUps;
-        displayDiv.innerText = list.length === 0 ? "Available Power-Ups: None" : "Available Power-Ups: " + list.join(", ");
+        if (displayDiv) {
+            let list = teams[teamKey].availablePowerUps;
+            displayDiv.innerText = list.length === 0 ? "Available Power-Ups: None" : "Available Power-Ups: " + list.join(", ");
+        } else {
+            console.warn(`${teamKey}-powerups element not found.`);
+        }
     }
+
 
     function onCellClick(teamKey, cellId) {
         let board = teams[teamKey].board;
@@ -799,6 +868,10 @@
         if (contextMenu.style.display === "block" && !contextMenu.contains(e.target)) {
             contextMenu.style.display = "none";
         }
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById("saveLayoutButton").addEventListener("click", saveLayout);
+        });
+
     });
 
     // Power-up activation
@@ -909,9 +982,18 @@
     // Randomize Boards button event
     document.getElementById("randomizeBoards").addEventListener("click", () => {
         if (confirm("Are you sure you want to re-randomize both boards? This will reset all progress.")) {
+            // Randomize both teams' boards
             initializeBoards();
+
+            // Reset the leaderboard stats for both teams
+            playerPoints.team1 = {};
+            playerPoints.team2 = {};
+
+            // Re-render the leaderboard
+            updateLeaderboard();
         }
     });
+
 
     let defaultBoardLayout = generateDefaultBoardLayout();
     initializeBoards();
